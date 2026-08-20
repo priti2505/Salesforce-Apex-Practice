@@ -1,0 +1,18 @@
+ public static void CollectionSetMethod()
+    {
+        Set<string> Names = New Set<string>();
+        Names.add('Faisal');
+        Names.add('Roshani');
+        Names.add('Venkatesh');
+        Names.add('Durgesh');
+        Names.add('Harshitha');
+        Names.add('Venkatesh');
+        
+        system.debug(Names);
+        system.debug(Names.size());
+        system.debug(Names.remove('Faisal'));
+        system.debug(Names);
+        Names.Clear();
+        system.debug(Names);
+        
+    }
