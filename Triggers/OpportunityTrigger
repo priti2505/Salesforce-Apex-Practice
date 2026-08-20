@@ -1,0 +1,11 @@
+
+trigger OppStage on Opportunity (before insert,before update) 
+{
+    for(Opportunity Opp : trigger.new)
+    { 
+        if(Opp.CloseDate ==date.today())
+        {
+            opp.StageName ='close lost';
+        }
+    }
+}
