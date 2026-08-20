@@ -1,0 +1,39 @@
+public class conditionExample 
+{
+    public static void ifExample()
+    {
+        Account acc = new Account();
+        acc.Name = 'Naresh acc';
+        acc.AccountNumber = 'Fai8980';
+        acc.Phone = '57657746767';
+        acc.NumberOfEmployees = 890;
+        acc.rating = 'Hot';
+        acc.SLAExpirationDate__c = date.newinstance(2026,10,09);
+        Insert acc;
+        system.debug(acc);
+        
+        if(acc.Rating == 'Hot' && ( acc.Industry=='Energy' || acc.Industry=='Education') )//comparing actual value with conditional value
+        {
+            Contact con = new Contact();
+            con.firstName = 'pawan';
+            con.lastName = 'kalyan';
+            con.Email = 'pawan@gmail.com';
+            con.AccountId = acc.Id;
+            Insert con;
+            system.debug(con);
+            
+        }
+        else
+        {
+            opportunity opp = new opportunity();
+            opp.Name = 'Testing opp';
+            opp.StageName = 'Prospecting';
+            opp.CloseDate = date.today();
+            opp.AccountId = acc.Id;
+            insert opp;
+            system.debug(opp);
+        }
+        
+    }
+    
+}
