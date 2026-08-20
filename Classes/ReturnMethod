@@ -1,0 +1,62 @@
+public class returnMethod
+{
+    public static void WORTWOP()
+    {
+        integer a =10;
+        integer b =20;
+        integer c =a+b;
+        system.debug(c);
+    }
+    public static void WORTWP(integer a,integer b)
+    {
+        integer c = a + b ;
+        system.debug(c);
+    }
+    
+    public static integer WPWORT()
+    {
+        integer a = 10;
+        integer b = 20;
+        integer c = a*b;
+        system.debug(c);
+        return c;
+        
+    }
+    
+    public static Account WPWORT2()
+    {
+        Account acc=new Account();
+        acc.name='shurpnakha';
+        acc.Account_Number_Dup__c='ggh546778';
+        acc.AccountNumber='YF H4398';
+        acc.Rating='cold';
+        acc.Email__c='sayli@gmail.com';
+        acc.SLAExpirationDate__c= date.newinstance(2026,08,09);
+        acc.Fax='FD09';
+        Insert acc;
+        system.debug(acc);
+        
+        return acc;
+    }
+    
+    public static list<Account>WPWORT3()
+    {
+        list<Account> acclist =[SELECT Id FROM Account];
+        system.debug(acclist);
+        return acclist;
+    }
+    
+    public static contact WRTWR(string LastName,string Email)
+    {
+        contact con=new contact();
+        con.LastName=LastName;
+        con.Email=Email;
+        con.Phone='8765432115';
+        Insert con;
+        system.debug(con);
+        return con;
+    }
+    
+    
+    
+}
