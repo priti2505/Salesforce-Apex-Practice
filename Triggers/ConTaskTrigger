@@ -1,0 +1,16 @@
+trigger ConTask on Contact (After insert,After update)
+{
+    for(contact con : trigger.new)
+    {
+        if(con.Phone == null)
+        {
+            task ta = new task();
+            ta.Subject ='get the contact details';
+            ta.WhoId =con.Id;
+            ta.ActivityDate =date.today().addDays(4);
+            ta.ownerId =con.ownerId;
+            insert ta;
+        }
+    }
+
+}
