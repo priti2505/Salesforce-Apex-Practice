@@ -1,0 +1,45 @@
+public class ConditionsDemo 
+{
+    public static void Task1()
+    {
+        integer i = 20;
+        if(i > 0) 
+        {
+            system.debug('Positive');
+        }
+    }
+    public static void Task2()
+    {
+        integer i = -30;
+        if(i > 0) 
+        {
+            system.debug('Positive');
+        }
+        else
+        {
+            system.debug('Negative');
+        }
+    }
+    public static void Task3()
+    {
+        integer i = 0;
+        if(i > 0) 
+        {
+            system.debug('Positive');
+        }
+        else if(i < 0)
+        {
+            system.debug('Negative');
+        }
+        else
+        {
+            system.debug('Zero');
+        }
+        
+    }
+    
+
+}
+
+
+
