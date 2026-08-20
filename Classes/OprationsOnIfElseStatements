@@ -1,0 +1,197 @@
+public class ConditionExample {
+    
+    public static void ifExample()
+    {
+        Account acc=new Account();
+        acc.name='shurpnakha';
+        acc.Account_Number_Dup__c='ggh546778';
+        acc.AccountNumber='YF H4398';
+        acc.Rating='cold';
+        acc.Email__c='sayli@gmail.com';
+        acc.Fax='FD09';
+        Insert acc;
+        system.debug(acc);
+        
+        if(acc.rating == 'Hot' && ( acc.Industry == 'Energy'|| acc.Industry=='Education') )//comparing actual value with conditional value
+        {
+            contact con=new contact();
+            con.FirstName='sachin';
+            con.LastName='deshmukh';
+            con.Phone='8765432112';
+            Insert con;
+            system.debug(con);
+            
+        }
+        else if(acc.Rating=='cold')
+        {
+            Case Ca=new Case();
+            Ca.Origin='Email';
+            Ca.Status='New';
+            Ca.Type='mechanical';
+            Insert Ca;
+            system.debug(Ca);
+        }
+        else
+        {
+            Opportunity Opp=new Opportunity();
+            Opp.Name='Riya';
+            Opp.Type='newcustomer';
+            Opp.StageName='prospecting';
+            Opp.CloseDate=date.newinstance(2000,09,25);
+            Insert Opp;
+            system.debug(Opp);
+        }
+    }
+    
+    public static void TestingIf()
+    {
+        Lead le = new Lead();
+        le.lastname ='patil';
+        le.Company='nit';
+        le.LeadSource='web';
+        le.Email='XYZ@gmail.com';
+        Insert le;
+        system.debug(le);
+        
+        if(le.LeadSource=='web'){
+            le.Description = 'This lead is genarated from web';
+            update le;
+            system.debug(le);
+        }
+    }
+    
+    public static void ExampleTask()
+    {
+        Opportunity Opp=new Opportunity();
+        Opp.Name='Riya';
+        Opp.Type='newcustomer';
+        Opp.StageName='prospecting';
+        Opp.CloseDate=date.newinstance(2000,09,25);
+        Opp.Amount= 20000;
+        Insert Opp;
+        system.debug(Opp);
+        
+        
+        if(Opp.Amount > 10000)
+            
+        {
+            Opp.StageName='Qualification';
+            update Opp;
+            
+        }
+    }
+    
+    public static void ExampleTask2()
+    {
+        Account acc=new Account();
+        acc.name='sayli';
+        acc.Account_Number_Dup__c='ggh546778';
+        acc.AccountNumber='YF H4398';
+        acc.Rating='cold';
+        acc.Email__c='sayli@gmail.com';
+        acc.Fax='FD09';
+        acc.AnnualRevenue = 50000;
+        Insert acc;
+        system.debug(acc);        
+        
+        if(acc.AnnualRevenue > 20000)
+        {
+            Opportunity Opp=new Opportunity();
+            Opp.Name='Riya';
+            Opp.Type='newcustomer';
+            Opp.StageName='prospecting';
+            Opp.CloseDate=date.newinstance(2000,09,25);
+            Opp.Amount= 20000;
+            Opp.AccountId =acc.Id;
+            Opp.Amount = acc.AnnualRevenue;
+            Insert Opp;
+            system.debug(Opp);
+        }
+    }
+    
+    public static void ExampleTask3()
+    {
+        Account acc=new Account();
+        acc.name='sayli';
+        acc.Account_Number_Dup__c='ggh546778';
+        acc.AccountNumber='YF H4398';
+        acc.Rating='cold';
+        acc.Email__c='sayli@gmail.com';
+        acc.Fax='FD09';
+        acc.Industry ='energy';
+        acc.AnnualRevenue = 10000;
+        Insert acc;
+        system.debug(acc);      
+        
+        
+        if(acc.Rating =='Hot' && acc.Industry == 'Energy' && acc.AnnualRevenue > 10000)
+        {
+            contact con=new contact();
+            con.FirstName='sachin';
+            con.LastName='deshmukh';
+            con.Phone = acc.Phone;
+            con.AccountId = acc.Id;
+            Insert con;
+            system.debug(con);
+            
+        }
+        else if(acc.Rating =='cold'&& acc.Industry =='None' && acc.AnnualRevenue >20000)
+        {
+            
+            
+            Opportunity Opp=new Opportunity();
+            Opp.Name='Riya';
+            Opp.Type='newcustomer';
+            Opp.StageName='prospecting';
+            Opp.CloseDate=date.newinstance(2000,09,25);
+            Opp.Amount= 20000;
+            Opp.AccountId =acc.Id;
+            Opp.Amount = acc.AnnualRevenue;
+            Insert Opp;
+            system.debug(Opp);
+            
+        }
+        else
+        {
+            
+            Case Ca=new Case();
+            Ca.Origin='Email';
+            Ca.Status='New';
+            Ca.Type='mechanical';
+            ca.AccountId = acc.Id;
+            Insert Ca;
+            system.debug(Ca);
+        }
+        
+        
+    }
+    
+    public static void LastTask()
+    {
+        
+        Account acc=new Account();
+        acc.name='sayli';
+        acc.Account_Number_Dup__c='ggh546778';
+        acc.AccountNumber='YF H4398';
+        acc.Rating='cold';
+        acc.Email__c='sayli@gmail.com';
+        acc.Fax='FD09';
+        acc.Industry ='energy';
+        acc.AnnualRevenue = 50000;
+        Insert acc;
+        system.debug(acc);  
+        
+        if(acc.Rating =='cold' && acc.AnnualRevenue > 50000)
+        {
+            contact con=new contact();
+            con.FirstName='sachin';
+            con.LastName='deshmukh';
+            con.Phone = acc.Phone;
+            con.AccountId = acc.Id;
+            Insert con;
+            system.debug(con);
+        }
+        
+    }
+    
+}
