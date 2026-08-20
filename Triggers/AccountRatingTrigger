@@ -1,0 +1,12 @@
+trigger AccountRatingTrigger on Account (before insert) 
+{
+    //if account created with rating blank then rating by default Hot
+    for( Account acc : trigger.new)
+    {
+        if(string.isBlank(acc.Rating))
+        {
+            acc.Rating ='Hot';
+        }
+    }
+
+}
