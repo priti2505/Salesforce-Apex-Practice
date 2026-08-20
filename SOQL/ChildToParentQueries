@@ -1,0 +1,3 @@
+SELECT Id, Amount__c, Account__r.Id, Account__r.Name, Account__r.AccountNumber, Account__r.Rating FROM Transaction__c
+
+SELECT Id, IFSC__C,Phone__c.Email__c, Account__r.Id ,Account__r.Name ,Account__r.AccountNumber, Account__r.Rating FROM Bank__c
