@@ -1,0 +1,28 @@
+public static void TestingIf()
+    {
+        /* Create a Lead If the Lead source is web 
+         * then update the Lead Description as “This lead is generated from Web”. 
+         */
+        
+        Lead le = New Lead();
+        le.LastName = 'Jack';
+        le.Company = 'N IT';
+        le.LeadSource = 'Web';
+        le.Company_Email__c = 'XYZ@gmail.com';
+        insert le;
+        system.debug(le);
+        
+        if(le.LeadSource == 'Web')
+        {
+            le.Description = 'his lead is generated from Web';
+            update le;
+            system.debug(le);
+        }
+        
+        
+        
+        
+    }
+
+
+
