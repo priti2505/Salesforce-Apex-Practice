@@ -1,0 +1,4 @@
+SELECT Id, Name, AccountNumber, Rating, (SELECT Id, Amount__c FROM Transactions__r) FROM Account
+
+
+SELECT Id,Name,AccountNumber,Rating ,(SELECT Id,IFSC__C,Phone__c,Email__c FROM Banks__r)FROM Account
