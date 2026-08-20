@@ -1,0 +1,64 @@
+trigger ContactTrigger on Contact (before insert,before update,before delete,after insert ,after update,after delete,after undelete)
+{
+    if(trigger.isBefore)
+    {
+        if( trigger.isInsert || trigger.isUpdate)
+        {
+            for(contact con: trigger.new)
+            {  
+                //Birthday date on today
+                if(con.Birthdate > date.today())
+                {
+                    con.Birthdate.adderror('Invalid Birthdate');
+                    
+                }
+                //Gender values for contact
+                if(con.Salutation == 'mr.')
+                {
+                    con.Description = 'male';
+                }
+                else if(con.Salutation == 'ms.'|| con.Salutation =='mrs.')
+                {
+                    con.Description ='Female';
+                }
+                
+                
+            }
+        }
+        
+        
+    }
+    
+    else if(trigger.isBefore  &&  trigger.isDelete)
+    {
+        for(contact con : trigger.old)
+        {
+            if(con.AccountId != null)
+            {
+                con.AccountId.adderror('can not delete the contact since it is related to an account');
+            }
+        }
+    }
+    
+    else if(trigger.isAfter ) 
+    {
+        if(trigger.isInsert ||trigger.isUpdate)
+        {
+            for(contact con : trigger.new)
+            {
+                if(con.Phone == null)
+                {
+                    task ta = new task();
+                    ta.Subject ='get the contact details';
+                    ta.WhoId =con.Id;
+                    ta.ActivityDate =date.today().addDays(4);
+                    ta.ownerId =con.ownerId;
+                    insert ta;
+                }
+            }
+            
+        }
+       
+    }
+    
+}
