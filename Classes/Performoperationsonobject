@@ -1,0 +1,57 @@
+public class ObjectClass{
+
+      //Account is create using classes    
+    public static void Accmethod(){
+        Account acc=new Account();
+        acc.name='sayli';
+        acc.Account_Number_Dup__c='ggh546778';
+        acc.AccountNumber='YF H4398';
+        acc.Email__c='sayli@gmail.com';
+        acc.Fax='FD09';
+        Insert acc;
+        system.debug(acc);
+             
+    }
+    public void  ConMethod (){
+        contact con=new contact();
+        con.FirstName='sachin';
+        con.LastName='deshmukh';
+        con.Phone='8765432112';
+        Insert con;
+        system.debug(con);
+        
+    }
+    
+    public static void Oppmethod(){
+        Opportunity Opp=new Opportunity();
+        Opp.Name='Riya';
+        Opp.Type='newcustomer';
+        Opp.StageName='prospecting';
+        Opp.CloseDate=date.newinstance(2000,09,25);
+        Insert Opp;
+        system.debug(Opp);
+    }
+    
+    public static void CaseMethod(){
+        Case Ca=new Case();
+        Ca.Origin='Email';
+        Ca.Status='New';
+        Ca.Type='mechanical';
+        Insert Ca;
+        system.debug(Ca);
+       
+    }
+    public static void BankMethod(){
+        Banking__c Bank=new Banking__c();
+        Bank.Name='North maharashtra';
+        Bank.Branch__c='kbcnmnu';
+        Bank.City__c='raver';
+        Bank.Email__c='maharahtra@gmail.com';
+        Bank.IFSC_code__c='MASH6767';
+        Bank.Address__c='punae';
+        Insert Bank;
+        system.debug(Bank);
+       
+    }
+    
+}
