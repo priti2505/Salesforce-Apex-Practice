@@ -1,0 +1,14 @@
+trigger GenderTrigger on Contact (before insert,before update) {
+
+    for(contact con: trigger.new)
+    {
+        if(con.Salutation == 'mr.')
+        {
+            con.Description = 'male';
+        }
+        else if(con.Salutation == 'ms.'|| con.Salutation =='mrs.')
+        {
+            con.Description ='Female';
+        }
+    }
+}
