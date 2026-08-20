@@ -1,0 +1,54 @@
+ public static void AccountCollection()
+    {
+        list<account> acclist = new list<account>();
+        
+        Account acc1 = new Account();
+        acc1.Name = 'Faisal acc';
+        acc1.AccountNumber = 'Fai8980';
+        acc1.Phone = '57657746767';
+        acc1.NumberOfEmployees = 890;
+        acc1.SLAExpirationDate__c = date.newinstance(2026,10,09);
+        acclist.add(acc1);
+        system.debug(acc1);
+        
+        
+        Account acc2 = new Account();
+        acc2.Name = 'Faisal acc';
+        acc2.AccountNumber = 'Fai8980';
+        acc2.Phone = '57657746767';
+        acc2.NumberOfEmployees = 890;
+        acc2.SLAExpirationDate__c = date.newinstance(2026,10,09);
+        acclist.add(acc2);
+        system.debug(acc2);
+        
+       
+        Account acc3 = new Account();
+        acc3.Name = 'Faisal acc';
+        acc3.AccountNumber = 'Fai8980';
+        acc3.Phone = '57657746767';
+        acc3.NumberOfEmployees = 890;
+        acc3.SLAExpirationDate__c = date.newinstance(2026,10,09);
+        acclist.add(acc3);
+        system.debug(acc3);
+        
+        
+        Account acc4 = new Account();
+        acc4.Name = 'Faisal acc';
+        acc4.AccountNumber = 'Fai8980';
+        acc4.Phone = '57657746767';
+        acc4.NumberOfEmployees = 890;
+        acc4.SLAExpirationDate__c = date.newinstance(2026,10,09);
+        acclist.add(acc4);
+        system.debug(acc4);
+        
+        insert acclist;
+        system.debug(acclist);
+    }
+    public static void getAccounts()
+    {
+        list<account> getAccRecords = [SELECT Id, Name, AccountNumber, Phone, NumberOfEmployees, SLAExpirationDate__c from Account where createdDate = Today];
+        system.debug(getAccRecords);
+        system.debug(getAccRecords.size());
+    }
+
+}
