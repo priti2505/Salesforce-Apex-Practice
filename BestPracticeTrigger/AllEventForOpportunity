@@ -1,0 +1,17 @@
+trigger OpportunityTrigger on Opportunity (before insert,before update,before delete,after insert ,after update,after delete,after undelete) 
+{  
+    if(trigger.isBefore)
+    {
+        if(trigger.isInsert || trigger.isUpdate)
+        {
+            
+            for(Opportunity Opp : trigger.new)
+            { 
+                if(Opp.CloseDate ==date.today())
+                {
+                    opp.StageName ='close lost';
+                }
+            }
+        }
+    }
+}
