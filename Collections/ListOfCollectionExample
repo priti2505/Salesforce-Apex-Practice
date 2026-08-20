@@ -1,0 +1,25 @@
+public class CollectionDemo 
+{
+    public static void collectionMethod()
+    {
+        list<string> Names = New list<string>();
+        Names.add('Faisal');		
+        Names.add('Roshani');
+        Names.add('Venkatesh');
+        Names.add('Durgesh');
+        Names.add('Harshitha');
+        Names.add('Venkatesh');
+        
+        system.debug(Names);
+        Names.add(3,'Kiran');
+        system.debug(Names);
+        system.debug(Names.Size());
+        system.debug(Names.get(4));
+        system.debug(Names.remove(2));
+        system.debug(Names);
+        Names.clear();
+        system.debug(Names);
+        
+        
+        
+    }
