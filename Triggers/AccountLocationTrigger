@@ -1,0 +1,28 @@
+trigger AccountLocationTrigger on Account (after insert) 
+{ 
+    list<contact> conlist = new list<contact>();
+    for(Account acc : trigger.new)
+    {
+        if(acc.NumberofLocations__c != null && acc.NumberofLocations__c > 0)
+        {
+            for(Integer i = 1;
+                i <= acc.NumberofLocations__c;
+                i++) {
+                    
+                contact con =new contact();
+                con.LastName ='location contact'+i;
+                con.AccountId =acc.Id;
+                
+                conlist.add(con);
+                
+            }
+           
+        }
+    }
+    if(!conlist.isEmpty())
+    {
+        insert conlist;
+    }
+     
+
+}
