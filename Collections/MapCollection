@@ -1,0 +1,21 @@
+public static void MapMethod()
+    {
+        Map<Integer, String> StudentDetails = New Map<Integer, String>();
+        StudentDetails.put(101,'Faisal');
+        StudentDetails.put(102,'Faisal');
+        StudentDetails.put(103,'Pavani');
+        StudentDetails.put(104,'Kiran');
+        StudentDetails.put(105,'Bhushan');
+        StudentDetails.put(106,'Kavya');
+        StudentDetails.put(106,'Ruchi');
+        
+        system.debug(StudentDetails);
+        
+        system.debug(StudentDetails.keyset());
+        System.debug(StudentDetails.values());
+        
+        Map<Id, Account> AccountData = New Map<Id, Account>([SELECT Id, Name FROM Account]);
+        system.debug(AccountData);
+        system.debug('The Account Values are '+AccountData.values());
+        system.debug('The Account Keys are ' +AccountData.keyset());
+    }
