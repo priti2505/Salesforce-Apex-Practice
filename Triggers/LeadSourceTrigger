@@ -1,0 +1,18 @@
+trigger LeadSourceTrigger on Lead (before insert) 
+{
+
+    //whenever lead is created with leadsource ='web' then  rating is "cold" otherwise rating is "hot"
+   
+    for(Lead L : trigger.new)
+    {
+        if(L.Leadsource == 'web')
+        {
+            L.Rating ='cold';
+            
+        }
+        else{
+            L.Rating ='Hot';
+        }
+    }
+    
+}
