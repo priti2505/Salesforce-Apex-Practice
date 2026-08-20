@@ -1,0 +1,15 @@
+If there is any condition in the query then we have to use WHERE Clause after the Object
+
+
+SELECT Id, Name, Phone, Rating, AccountNumber, AnnualRevenue FROM Account WHERE Rating = 'Hot'
+
+SELECT Id, Name, Phone, Rating, AccountNumber, AnnualRevenue FROM Account WHERE Rating != 'Hot'
+
+SELECT Id, Name, Phone, Rating, AccountNumber, AnnualRevenue FROM Account WHERE Rating = null
+
+SELECT Id, Name, Phone, Rating, AccountNumber, AnnualRevenue FROM Account WHERE Rating != null
+
+SELECT Fields(all) from account where rating='Hot' and createddate=last_n_months:3 limit 200
+
+SELECT name , rating, createddate from account where rating='warm' and Day_only(createddate)= 2026-06-16
+
