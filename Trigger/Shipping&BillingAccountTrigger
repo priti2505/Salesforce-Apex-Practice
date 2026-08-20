@@ -1,0 +1,15 @@
+trigger AccountAdressTrigger on Account (before insert) 
+{
+
+    for(Account acc : trigger.new)
+    {
+        if(acc.Copy_Billing_To_Shipping__c == True)
+        {
+           acc.ShippingStreet = acc.BillingStreet;
+            acc.ShippingCity = acc.BillingCity;
+            acc.ShippingState = acc.BillingState;
+            acc.ShippingPostalCode = acc.BillingPostalCode;
+            acc.ShippingCountry = acc.BillingCountry;
+        }
+    }
+}
