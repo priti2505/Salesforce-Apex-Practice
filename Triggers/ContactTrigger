@@ -1,0 +1,10 @@
+trigger RelAcc on Contact (before delete) 
+{
+    for(contact con : trigger.old)
+    {
+        if(con.AccountId != null)
+        {
+            con.AccountId.adderror('can not delete the contact since it is related to an account');
+        }
+    }
+}
