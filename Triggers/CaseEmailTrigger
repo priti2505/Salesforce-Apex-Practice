@@ -1,0 +1,14 @@
+trigger CaseEmailTrigger on Case (before insert)
+{
+
+
+//whenever case created with origin 'Email' then status ='new' and priority = 'medium'
+    for(case c : trigger.new)
+    {
+        if(c.Origin =='Email')
+        {
+            c.Status ='new';
+            c.Priority ='medium';
+        }
+    }
+}
