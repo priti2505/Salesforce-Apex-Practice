@@ -1,0 +1,16 @@
+trigger AnnualRevToOpp on Account (after update)
+{
+    for(account acc :trigger.new)
+    {
+        if(acc.AnnualRevenue  !=null)
+        {
+            list<opportunity> accRelatedOpp =[SELECT Id ,Amount FROM Opportunity WHERE AccountId =:Acc.Id];
+            for(Opportunity Opp: accRelatedOpp)
+            {
+                Opp.Amount =acc.AnnualRevenue;
+            }
+            update accRelatedOpp;
+            
+            }
+        }
+    }
