@@ -1,0 +1,16 @@
+trigger CreateCaseForColdRating on Account (after update)
+{
+    
+    for(Account Acc : trigger.new)
+    {
+        if(acc.Rating =='cold')
+        {
+            case ca =new case();
+            ca.Origin ='web';
+            ca.Status ='new';
+            ca.AccountId =acc.id;
+            insert ca;
+        }
+    }
+
+}
