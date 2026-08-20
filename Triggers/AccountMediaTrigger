@@ -1,0 +1,14 @@
+trigger AccountMediaTrigger on Account (before insert) 
+{
+    
+    
+    //when account create industry is media then populate rating is hot
+
+    for(Account acc : trigger.new)
+    {
+        if(acc.Industry == 'media')
+        {
+            acc.Rating ='Hot';
+        }
+    }
+}
