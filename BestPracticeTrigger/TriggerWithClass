@@ -1,0 +1,106 @@
+//CLASS METHOD CODE
+
+public class AccountTriggerHandler
+{
+    public static void BeforeDelete(list<Account>NewList)
+    {
+        for(Account Acc : NewList)
+        {
+           list<contact>conlist =[SELECT id FROM contact WHERE accountid =: acc.id];
+            integer i =conlist.size();
+            if(i >0)
+            {
+                Acc.adderror('can not delete the account since it has '+i+ 'contacts');
+            }
+        }
+    }
+    
+    public static void BeforeInsertBeforeUpdate(list<account>NewList)
+    {
+        for(account acc: NewList)
+            {
+                if(acc.industry == 'Education' && acc.Type =='prospect' && acc.AnnualRevenue == null)
+                {
+                    acc.AnnualRevenue.adderror('kindly enter the Annual Revenue');
+                }
+            }
+    }
+    
+    public static void AfterUpdate(list<account>NewList ,Map<Id ,Account>OldMap)
+    {
+         for(account acc : NewList)
+            {
+                if(acc.AnnualRevenue != null)
+                {
+                    list<opportunity> accRelatedOpp = [SELECT Id,Amount FROM opportunity WHERE AccountId =: acc.id];
+                    for(opportunity opp :accRelatedOpp)
+                    {
+                        opp.Amount = acc.AnnualRevenue;
+                    }
+                    update accRelatedOpp;
+                }
+                if(acc.Rating == 'cold')
+                {
+                    case ca = new case();
+                    ca.Status ='New';
+                    ca.Origin ='Web';
+                    ca.AccountId = acc.Id;
+                    insert ca;
+                }
+                Account accOld = OldMap.get(acc.Id);
+                if(acc.Phone != accold.phone)
+                {
+                    list<contact> accRelatedCon = [SELECT Id,phone FROM contact WHERE accountid =:acc.id];
+                    for(contact con :accRelatedCon)
+                    {
+                        con.phone = acc.phone;
+                    }
+                    update accRelatedCon;
+                }
+            }
+        }
+    
+    public static void AfterInsert(list<account> NewList)
+    {
+        for(account acc : NewList)
+        {
+            if(acc.Rating == 'Hot')
+            {
+                contact con = new contact();
+                con.LastName = 'Rel Con';
+                con.AccountId = acc.Id;
+                insert con;
+            }
+        }
+    }
+        
+    }
+// code will be written in the form of method 
+// and trigger it's execute it .
+
+//TRIGGER CODE 
+
+trigger Accountrigger on Account (before insert, before delete , before update , after insert,after update, after delete,after undelete)
+{  
+    if(trigger.isBefore )
+    {
+        if(trigger.isDelete)
+        {
+            AccountTriggerHandler.BeforeDelete(trigger.new); 
+        }
+        if(trigger.isInsert || trigger.IsUpdate)
+        { 
+            AccountTriggerHandler.BeforeInsertBeforeUpdate(trigger.new);
+            
+        }
+        if(trigger.isAfter && trigger.isUpdate)
+        {
+            AccountTriggerHandler.AfterUpdate(trigger.new , trigger.oldMap);
+            
+        }
+        if(trigger.isAfter && trigger.isInsert)
+        {
+            AccountTriggerHandler.AfterInsert(trigger.new);
+        }
+    }
+}
