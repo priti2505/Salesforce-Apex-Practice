@@ -1,0 +1,93 @@
+//APEX CODE
+
+public class ContactTriggerHandler
+{
+    public void BeforeInsertBeforeUpdate(list<contact>NewList)
+    {
+         for(contact con: NewList)
+            {  
+                //Birthday date on today
+                if(con.Birthdate > date.today())
+                {
+                    con.Birthdate.adderror('Invalid Birthdate');
+                    
+                }
+                //Gender values for contact
+                if(con.Salutation == 'mr.')
+                {
+                    con.Description = 'male';
+                }
+                else if(con.Salutation == 'ms.'|| con.Salutation =='mrs.')
+                {
+                    con.Description ='Female';
+                }
+                
+                
+            }
+    }
+    
+    public void BeforeDelete(list<contact>OldList)
+    {
+         for(contact con : OldList)
+            {
+                if(con.AccountId != null)
+                {
+                    con.AccountId.adderror('can not delete the contact since it is related to an account');
+                }
+            }
+            
+    }
+    public void AfterInsertAfterUpdate(list<contact>NewList)
+    {
+         for(contact con : NewList)
+            {
+                if(con.Phone == null)
+                {
+                    task ta = new task();
+                    ta.Subject ='get the contact details';
+                    ta.WhoId =con.Id;
+                    ta.ActivityDate =date.today().addDays(4);
+                    ta.ownerId =con.ownerId;
+                    insert ta;
+                }
+            }
+    }
+
+}
+
+
+
+// APEX TRIGGER CODE
+
+trigger ContactTrigger on Contact (before insert,before update,before delete,after insert ,after update,after delete,after undelete)
+{
+    if(trigger.isBefore)
+    {
+        if( trigger.isInsert || trigger.isUpdate)
+        {
+            ContactTriggerHandler cth = new ContactTriggerHandler();
+            cth.BeforeInsertBeforeUpdate(trigger.new);
+           
+        }
+        
+        if(trigger.isDelete)
+        {
+             ContactTriggerHandler cth = new ContactTriggerHandler();
+             cth.BeforeDelete(trigger.old);
+        }
+     
+    }
+    
+    
+    if(trigger.isAfter ) 
+    {
+        if(trigger.isInsert ||trigger.isUpdate)
+        {
+            ContactTriggerHandler cth = new ContactTriggerHandler();
+            cth.AfterInsertAfterUpdate(trigger.new);
+            
+        }
+        
+    }
+    
+}
