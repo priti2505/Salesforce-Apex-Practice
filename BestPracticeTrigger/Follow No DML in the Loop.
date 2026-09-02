@@ -1,0 +1,93 @@
+public class AccountTriggerHandler
+{
+    public static void BeforeDelete(list<Account>NewList)
+    {
+        set<id> accids = new set<id>();
+        for(Account Acc : NewList)
+        {
+            accids.add(acc.id);
+        }
+        list<contact>conlist =[SELECT id FROM contact WHERE accountid IN : accids];
+        for(Account acc1 : NewList)
+        {
+            integer i =conlist.size();
+            if(i >0)
+            {
+                Acc1.adderror('can not delete the account since it has '+i+ 'contacts');
+            }
+        }
+    }
+    
+    public static void BeforeInsertBeforeUpdate(list<account>NewList)
+    {
+        for(account acc: NewList)
+        {
+            if(acc.industry == 'Education' && acc.Type =='prospect' && acc.AnnualRevenue == null)
+            {
+                acc.AnnualRevenue.adderror('kindly enter the Annual Revenue');
+            }
+        }
+    }
+    
+    public static void AfterUpdate(list<account>NewList ,Map<Id ,Account>OldMap)
+    {
+        set<id>accidsphone =new set<id>();
+        set<id> accids =new set<id>(); //collection account ids
+        list<case> calist =new list<case>();
+        for(account acc : NewList)
+        {
+            if(acc.AnnualRevenue != null)
+            {
+                accids.add(acc.id);
+            }
+            if(acc.Rating == 'cold')
+            {
+                case ca = new case();
+                ca.Status ='New';
+                ca.Origin ='Web';
+                ca.AccountId = acc.Id;
+                calist.add(ca);
+            }
+            Account accOld = OldMap.get(acc.Id);
+            if(acc.Phone != accold.phone)//the phone is change 
+            {
+                accidsphone.add(acc.id); 
+            }
+            
+        }
+        insert calist;
+        
+        
+        list<opportunity> accRelatedOpp = [SELECT Id,Amount FROM opportunity WHERE AccountId IN: accids];
+        for(opportunity opp :accRelatedOpp)
+        {
+            opp.Amount = opp.Account.AnnualRevenue;
+        }
+        update accRelatedOpp;
+        
+        list<contact> accRelatedCon = [SELECT Id,phone,account.phone FROM contact WHERE accountid IN:accidsphone];
+        for(contact con :accRelatedCon)
+        {
+            con.phone = con.account.phone;
+        }
+        update accRelatedCon;
+        
+    }
+        
+        
+        public static void AfterInsert(list<account> NewList)
+       
+        {
+            for(account acc : NewList)
+            {
+                if(acc.Rating == 'Hot')
+                {
+                    contact con = new contact();
+                    con.LastName = 'Rel Con';
+                    con.AccountId = acc.Id;
+                    insert con;
+                }
+            }
+        }
+        
+    }
