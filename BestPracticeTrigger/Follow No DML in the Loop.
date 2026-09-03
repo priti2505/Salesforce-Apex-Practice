@@ -1,3 +1,5 @@
+//NO DML follow n ACCOUNT TRIGGER 
+
 public class AccountTriggerHandler
 {
     public static void BeforeDelete(list<Account>NewList)
@@ -91,3 +93,84 @@ public class AccountTriggerHandler
         }
         
     }
+
+//NO DML follow in CONTACT TRIGGER
+
+
+public class ContactTriggerHandler
+{
+    
+    public static void BeforeInsertBeforeUpdate(list<contact>NewList)
+    {
+        set<id>conaccids =new set<id>();
+        for(contact con: NewList)
+        {  
+            conaccids.add(con.AccountId);
+            //Birthday date on today
+            if(con.Birthdate > date.today())
+            {
+                con.Birthdate.adderror('Invalid Birthdate');
+                
+            }
+            
+            //Gender values for contact
+            if(con.Salutation == 'mr.')
+            {
+                con.Description = 'male';
+            }
+            else if(con.Salutation == 'ms.'|| con.Salutation =='mrs.')
+            {
+                con.Description ='Female';
+            }
+            
+            //mailling country
+            if(con.MailingCountry != null && con.MailingState == null)
+            {
+                con.MailingState.adderror('Kindly select the state');
+            }
+        }
+            
+        //not more than 3 contact to single account 
+        account relAcc =[SELECT Id FROM Account WHERE id IN:conaccids];
+        list<contact>conlist =[SELECT Id FROM contact WHERE AccountId =:relAcc.Id];
+        for(contact Checkcon : NewList)
+        {
+            if(conlist.size()>=3)
+            {
+                Checkcon.adderror('contact limit Excceded ,not more than 3 contact for a single Account');
+            }
+            
+        }
+        
+    }
+    
+    public void BeforeDelete(list<contact>OldList)
+    {
+        
+        for(contact con : OldList)
+        {
+            if(con.AccountId != null)
+            {
+                con.AccountId.adderror('can not delete the contact since it is related to an account');
+            }
+        }
+        
+    }
+    public void AfterInsertAfterUpdate(list<contact>NewList)
+    {
+        //Phone is null then create Task
+        for(contact con : NewList)
+        {
+            if(con.Phone == null)
+            {
+                task ta = new task();
+                ta.Subject ='get the contact details';
+                ta.WhoId =con.Id;
+                ta.ActivityDate =date.today().addDays(4);
+                ta.ownerId =con.ownerId;
+                insert ta;
+            }
+        }
+    }
+    
+}
