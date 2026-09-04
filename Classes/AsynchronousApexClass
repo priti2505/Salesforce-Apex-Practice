@@ -1,0 +1,24 @@
+public class futureAsync 
+{
+    @future
+    public static void UpdateUser()
+    {
+        User ur = [SELECT Id, IsActive FROM User WHERE UserName ='shalini65@gmail.com'];
+        ur.IsActive = false;
+        Update ur;
+        system.debug(ur);
+        
+    }
+    
+    public static void CreateCase()
+    {
+        futureAsync.UpdateUser();
+        case ca = new case();
+        ca.Origin ='web';
+        ca.Status ='new';
+        insert ca;
+        system.debug(ca);
+        
+    }
+
+}
