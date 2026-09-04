@@ -1,0 +1,40 @@
+public class LongRunningOperations
+{
+    @future public static void CreatingAccount()
+    {
+        for(integer i=0; i<15; i++)
+        {
+            account acc = new account();
+            acc.name ='princesss'+ i;
+            insert acc;
+            system.debug(acc);
+        }
+    }
+    
+    @future public static void CreatingContact()
+    {
+        for(integer i=0; i<10; i++)
+        {
+            contact con =new contact();
+            con.LastName ='trisha' + i;
+            insert con;
+            system.debug(con);
+            
+        }
+    }
+    public static void CreatingCase()
+    {
+        LongRunningOperations.CreatingAccount();
+        LongRunningOperations.CreatingContact();
+        for(integer i=0; i<5; i++)
+        {
+            case ca =new case();
+            ca.Origin ='web';
+            ca.Status ='new';
+            insert ca;
+            system.debug(ca);
+            
+        }
+    }
+    
+}
