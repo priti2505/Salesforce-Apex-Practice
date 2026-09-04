@@ -1,0 +1,12 @@
+//Delete the class month close record
+public class ScheduleDemo  Implements Schedulable
+{
+    public void execute(SchedulableContext SC)
+    {
+        list<case> LMCloseCases = [SELECT Id FROM case WHERE ClosedDate = Last_Month];
+        delete LMCloseCases;
+        
+    }
+    
+
+}
