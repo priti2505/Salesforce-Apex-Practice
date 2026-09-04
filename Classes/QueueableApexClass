@@ -1,0 +1,11 @@
+public class QueueableApexDemo implements Queueable
+{
+   public void execute(QueueableContext QC)
+   {
+       User ur = [SELECT Id, IsActive FROM User WHERE UserName ='shalini65@gmail.com'];
+       ur.IsActive = false;
+       Update ur;
+       system.debug(ur);
+   }
+
+}
