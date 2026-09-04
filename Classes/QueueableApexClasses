@@ -1,0 +1,47 @@
+//QUEUEABLE CLASS 1
+public class QueueableApexDemo implements Queueable
+{
+   public void execute(QueueableContext QC)
+   {
+       User ur = [SELECT Id, IsActive FROM User WHERE UserName ='shalini65@gmail.com'];
+       ur.IsActive = false;
+       Update ur;
+       system.debug(ur);
+   }
+
+}
+
+//QUEUEABLE CLASS 2
+public class QueueableApexDemo implements Queueable
+{
+   public void execute(QueueableContext QC)
+   {
+       User ur = [SELECT Id, IsActive FROM User WHERE UserName ='shalini65@gmail.com'];
+       ur.IsActive = true;
+       Update ur;
+       system.debug(ur);
+   }
+
+}
+
+
+//QUEUEABLE CLASS 3
+//QUEUEABLE CLASS CALL INTO ANOTHER QUEUEABLE CLASS
+//Example:-
+
+public class QueueableApexExample implements Queueable
+{
+    public void execute(QueueableContext QC)
+    {
+        QueueableApexDemo QAD = new QueueableApexDemo();   //queueable class call into another queueable class.
+        system.enqueuejob(QAD);
+        
+        case ca =new case();
+        ca.Origin ='phone';
+        ca.Status ='new';
+        insert ca;
+        
+    }
+    
+
+}
