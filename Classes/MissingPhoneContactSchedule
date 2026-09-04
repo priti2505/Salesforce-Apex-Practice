@@ -1,0 +1,30 @@
+//Create Task for all the contact whose phone number is missing using
+schedule apex every day at 6 pm
+
+public class MissingPhoneContactSchedule implements schedulable
+{
+    public static void execute(SchedulableContext SC)
+    {
+        list<contact> conlist = [SELECT id,firstname,lastname FROM contact WHERE phone = null ];
+        
+        list<task> tasklist = new list<task>();
+        for (contact con: conlist )
+        {
+            Task t = new Task();
+            t.Subject ='Update missing phone number ';
+            t.WhoId = con.id;
+            t.Status = 'Not Started';
+            t.Priority ='normal';
+            tasklist.add(t);
+        }
+        if(!tasklist.isEmpty())
+        {
+            insert tasklist;
+        }
+            
+        
+        
+    }
+    
+
+}
