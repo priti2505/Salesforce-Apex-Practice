@@ -1,4 +1,5 @@
 //Batch apex to update account phone number
+//Example 1
 
 public class BatchApexPhone implements database.batchable<sObject>
 {
@@ -46,3 +47,53 @@ public class ScheduleBatchTime implements schedulable
 //#Execution:-
 scheduleTime st = new scheduleTime();
 system.schedule('Executing Batch','0 16 8 13 7 ? 2026',st);
+
+
+//Example 2:-
+public class BatchApexExample implements database.batchable<sObject>
+{
+    public static <contact> start(database.batchableContext sbc)
+    {
+        list<contact> updateContact = [SELECT Id,firstname,lastname FROM contact WHERE phone =null];
+        return updateContact;
+        
+    }
+    public static void execute(database.batchableContext ebc,list<contact> updateContact)
+    {
+        for(contact con:updateContact)
+        {
+            con.phone ='8765432109';
+        }
+        update updateContact;
+        
+    }
+    public static void finish(database.batchableContext fbc)
+    {
+        
+    }
+
+}
+
+//Execution :- 
+BatchApexPhone bap = new BatchApexPhone();
+    database.executeBatch(bap);
+
+
+
+
+//Batch turn into scheduled
+public class ScheduleBatchApexExample2 implements schedulable
+{
+    public void execute(schedulableContext SC)
+    {
+        BatchApexPhone bap = new BatchApexPhone();
+        database.executeBatch(bap);
+        
+    }
+
+}
+
+//Execution :-
+ScheduleBatchApexExample2   sbae = new ScheduleBatchApexExample2();
+system.schedule('Executing BatchExample','0 0 21 6 9 ? 2026',sbae);
+
