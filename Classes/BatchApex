@@ -1,0 +1,48 @@
+//Batch apex to update account phone number
+
+public class BatchApexPhone implements database.batchable<sObject>
+{
+    public static list<account> start(database.batchableContext sbc)
+    {
+        list<account> emptyphones =[SELECT Id ,phone FROM account WHERE phone = null];
+        return emptyphones;
+    }
+    public static void execute(database.batchableContext ebc, list<account> emptyphones)
+    {
+        for(account acc :emptyphones)
+        {
+            acc.phone ='1234567890';
+        }
+        update emptyphones;
+        
+    }
+    public static void finish(database.batchableContext fbc)
+    {
+        
+    }
+
+}
+
+//#Execution:-
+BatchPhone BP = New BatchPhone();
+database.executeBatch(BP);
+
+
+
+
+//Batch Apex turn into schedule Apex
+
+public class ScheduleBatchTime implements schedulable
+{
+    public  void execute(SchedulableContext SC)
+    {
+        BatchApexPhone BAP = new BatchApexPhone();
+        database.executeBatch(BAP);
+        
+    }
+
+}
+
+//#Execution:-
+scheduleTime st = new scheduleTime();
+system.schedule('Executing Batch','0 16 8 13 7 ? 2026',st);
