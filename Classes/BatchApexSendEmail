@@ -1,0 +1,49 @@
+public class BatchPhone implements database.batchable<sObject>
+{
+    public database.querylocator start(database.batchableContext sbc)
+    {
+        return database.getQueryLocator('SELECT Id,Phone FROM Account WHERE Phone = Null');
+        
+    }
+    public void execute(database.batchableContext ebc, list<account>emptyPhones)
+    {
+        for(account acc : emptyPhones)
+        {
+            acc.Phone = '1234567890';
+          
+        }
+        update emptyPhones;
+    }
+    public void finish(database.batchableContext fbc)
+    {
+        list<string> toAddresses = New list<string>();
+        toAddresses.add('Faisalkhansalesforce@gmail.com');
+        toAddresses.add('venkyjoshini@gmail.com');
+        
+        list<string> ccAddresses = New list<string>();
+        ccAddresses.add('Harshithanunna241@gmail.com');
+        
+        list<Messaging.SingleEmailMessage> SEMList = New list<Messaging.SingleEmailMessage>();
+        
+        Messaging.SingleEmailMessage SEM = New Messaging.SingleEmailMessage();
+        SEM.settoaddresses(toAddresses);
+        SEM.setccaddresses(ccAddresses);
+        
+        SEM.setSubject('Phone Numbers Updated');
+        SEM.setplaintextbody('Dear Admin, \n All the Account Phone Numbers are Updated Successfully');
+        
+        SEMList.add(SEM);
+        
+        Messaging.sendEmail(SEMList);
+        
+        
+        
+    }
+
+}
+
+
+Execution
+BatchPhone BP = New BatchPhone();
+database.executeBatch(BP);
+
