@@ -1,0 +1,52 @@
+public class PracticeExample implements database.batchable<sObject>
+{
+    public database.queryLocator start (database.batchableContext sdb)
+    {
+        return database.getQueryLocator('SELECT Id ,Rating FROM Account WHERE Rating = null');
+        
+    }
+    public  void execute (database.batchableContext  edb , list<Account> accountRating)
+    {
+        for(Account acc :accountRating)
+        {
+            acc.Rating = 'Hot';
+            
+            
+        }
+        update accountRating;
+        
+    }
+    public  void finish(database.batchableContext fdb)
+    {
+        //settoAddresses call list
+        list <string> toAddresses = new list<string>();
+        toAddresses.add('patilmueksh1503@gmail.com');
+        
+        //setccAddresses call list
+        list<string> ccAddresses = new list<string>();
+        ccAddresses.add('patilkomal9420@gmail.com');
+        
+        //settobccAddresses call list
+        list <string>bccAddresses = new list<string>();
+        bccAddresses.add('koaml@gmail.ccom');
+        
+        list<Messaging.SingleEmailMessage> emllist = new list<Messaging.SingleEmailMessage>();
+        
+        Messaging.SingleEmailMessage  SEM = new Messaging.SingleEmailMessage();
+        SEM.settoaddresses(toAddresses);
+        SEM.setccaddresses(ccAddresses);
+        SEM.setbccaddresses(bccAddresses);
+        SEM.setSubject('Sending the Invivation for meet up');
+        SEM.setPlaintextbody('Dear Sweetheart \n Thank you for comming my life and make it very happy and memorable moments in my life , To the person i was feel very happy and very lucky to have you as my BestestFriend Forever, in my life many people can come the presious person in my life is to you i am so so happy to have you in my life ,Thank you Medhakkk for EveryThing I love you so much!!!');
+        
+        emllist.add(SEM);
+        Messaging.SendEmail(emllist);
+        
+        
+    }
+    
+}
+
+//Execution
+PracticeExample  pc = new PracticeExample();
+database.executeBatch(pc);
