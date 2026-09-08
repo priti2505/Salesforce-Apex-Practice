@@ -1,0 +1,191 @@
+//contactTriggerHandler
+
+public class ContactTriggerHandler
+{
+    
+    public static void BeforeInsertBeforeUpdate(list<contact>NewList)
+    {
+        set<id>conaccids =new set<id>();
+        for(contact con: NewList)
+        {  
+            conaccids.add(con.AccountId);
+            //Birthday date on today
+            if(con.Birthdate > date.today())
+            {
+                con.Birthdate.adderror('Invalid Birthdate');
+                
+            }
+            
+            //Gender values for contact
+            if(con.Salutation == 'Mr.')
+            {
+                con.Description = 'Male';
+            }
+            else if(con.Salutation == 'Ms.' || con.Salutation == 'Mrs.')
+            {
+                con.Description = 'Female';
+            }
+            
+            //mailling country
+            if(con.MailingCountry != null && con.MailingState == null)
+            {
+                con.MailingState.adderror('Kindly select the state');
+            }
+        }
+        
+        //not more than 3 contact to single account 
+        //account relAcc =[SELECT Id FROM Account WHERE id IN:conaccids];
+        //list<contact>conlist =[SELECT Id FROM contact WHERE AccountId =:relAcc.Id];
+        //for(contact Checkcon : NewList)
+        //{
+        // if(conlist.size()>=3)
+        //{
+        // Checkcon.adderror('contact limit Excceded ,not more than 3 contact for a single Account');
+        //}
+        //}
+        
+    }
+    
+    
+    
+    
+    public  void BeforeDelete(list<contact>OldList)
+    {
+        
+        for(contact con : OldList)
+        {
+            if(con.AccountId != null)
+            {
+                con.AccountId.adderror('can not delete the contact since it is related to an account');
+            }
+        }
+    }
+    
+    public void AfterInsertAfterUpdate(list<contact>NewList)
+    {
+        list<task> talist = new list<task>();
+        //Phone is null then create Task
+        for(contact con : NewList)
+        {
+            if(con.Phone == null)
+            {
+                task ta = new task();
+                ta.Subject ='get the contact details';
+                ta.WhoId =con.Id;
+                ta.ActivityDate =date.today().addDays(4);
+                ta.ownerId =con.ownerId;
+                talist.add(ta);
+            }
+        }
+        insert talist;
+    }
+    
+    
+}
+
+
+//ContactTriggerHandlerTest
+
+
+@istest public class ContactTriggerHandlerTest 
+{
+    @istest private static void BeforeInsertBeforeUpdate()
+    {
+        contact con = new contact();
+        con.LastName ='singhaniya';
+        con.FirstName = 'tara';
+        con.Email = 'tara@gmail.com';
+        con.Birthdate = date.newinstance(2026 ,09,25);
+        
+        try
+        {
+            insert con;
+        }
+        catch(exception e)
+        {
+            system.assert(e.getMessage().contains('Invalid Birthdate'));
+        }
+        Contact con1 = new Contact();
+        con1.Salutation = 'Mr.';
+        con1.LastName = 'Singhaniya';
+        con1.FirstName = 'rish';
+        con1.Email = 'rish@gmail.com';
+        
+        insert con1;
+        
+        Contact getcon1 = [SELECT Id, Description FROM Contact WHERE Id = :con1.Id];
+        
+        System.assertEquals('Male', getcon1.Description);
+        
+        
+        Contact con2 = new Contact();
+        con2.Salutation = 'Mrs.';
+        con2.LastName = 'Singhaniya';
+        con2.FirstName = 'karishma';
+        con2.Email = 'rish@gmail.com';
+        
+        insert con2;
+        
+        Contact getcon2 = [SELECT Id, Description FROM Contact WHERE Id = :con2.Id];
+        
+        System.assertEquals('Female', getcon2.Description);
+        
+        
+        contact con3 = new contact();
+        con3.LastName ='maheshwari';
+        con3.FirstName = 'pritii';
+        con3.Email = 'priti@gmail.com';
+        con3.MailingCountry = 'India';
+        try
+        {
+            insert con3;
+        }
+        catch(exception e)
+        {
+            system.assert(e.getMessage().contains('Kindly select the state'));
+        }
+        
+    }
+    @istest private static void BeforeDelete()
+    {
+        Account acc = new Account();
+        acc.Name ='naitik';
+        acc.Type ='Technology partner';
+        acc.Industry ='Electronics';
+        acc.AnnualRevenue =67000;
+        insert acc;
+        
+        
+        contact con = new contact();
+        con.LastName ='singhaniya';
+        con.FirstName = 'tara';
+        con.Email = 'tara@gmail.com';
+        con.AccountId = acc.id;
+        insert con;
+        
+        try
+        {
+            delete con;
+        }
+        catch(exception e)
+        {
+            system.assert(e.getMessage().contains('can not delete the contact since it is related to an account'));
+        }
+        
+    }
+    @IsTest
+    private static void AfterInsertAfterUpdate()
+    {
+        Contact con = new Contact();
+        con.FirstName = 'Sachin';
+        con.LastName = 'Deshmukh';
+        // Phone mat do
+        insert con;
+        
+        List<Task> ta = [SELECT Id FROM Task WHERE WhoId = :con.Id];
+        
+        System.assertEquals(1, ta.size());
+    }
+    
+    
+}
