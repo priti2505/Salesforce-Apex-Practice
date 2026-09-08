@@ -1,1 +1,236 @@
+//AccountTriggerHandler
+
+public class AccountTriggerHandler
+{
+    public static void BeforeDelete(list<Account>OldList)
+    {
+        set<id> accids = new set<id>();
+        for(Account Acc : OldList)
+        {
+            accids.add(acc.id);
+        }
+        list<contact>conlist =[SELECT id FROM contact WHERE accountid IN : accids];
+        for(Account acc1 : OldList)
+        {
+            integer i =conlist.size();
+            if(i >0)
+            {
+                Acc1.adderror('can not delete the account since it has '+i+ 'contacts');
+            }
+        }
+    }
+    
+    public static void BeforeInsertBeforeUpdate(list<account>NewList)
+    {
+        for(account acc: NewList)
+        {
+            if(acc.industry == 'Electronics' && acc.Type =='Technology partner' && acc.AnnualRevenue == null)
+            {
+                acc.AnnualRevenue.adderror('kindly enter the Annual Revenue');
+            }
+        }
+    }
+    
+    public static void AfterUpdate(list<account>NewList ,Map<Id ,Account>OldMap)
+    {
+        set<id>accidsphone =new set<id>();
+        set<id> accids =new set<id>(); //collection account ids
+        list<case> calist =new list<case>();
+        for(account acc : NewList)
+        {
+            if(acc.AnnualRevenue != null)
+            {
+                accids.add(acc.id);
+            }
+            if(acc.Rating == 'cold')
+            {
+                case ca = new case();
+                ca.Status ='New';
+                ca.Origin ='Web';
+                ca.AccountId = acc.Id;
+                calist.add(ca);
+            }
+            Account accOld = OldMap.get(acc.Id);
+            if(acc.Phone != accold.phone)//the phone is change 
+            {
+                accidsphone.add(acc.id); 
+            }
+            
+        }
+        insert calist;
+        
+        
+        list<opportunity> accRelatedOpp = [SELECT Id,Amount FROM opportunity WHERE AccountId IN: accids];
+        for(opportunity opp :accRelatedOpp)
+        {
+            opp.Amount = opp.Account.AnnualRevenue;
+        }
+        update accRelatedOpp;
+        
+        list<contact> accRelatedCon = [SELECT Id,phone,account.phone FROM contact WHERE accountid IN:accidsphone];
+        for(contact con :accRelatedCon)
+        {
+            con.phone = con.account.phone;
+        }
+        update accRelatedCon;
+        
+    }
+    
+    
+    public static void AfterInsert(list<account> NewList)
+        
+    {
+        for(account acc : NewList)
+        {
+            if(acc.Rating == 'Hot')
+            {
+                contact con = new contact();
+                con.LastName = 'Rel Con';
+                con.AccountId = acc.Id;
+                insert con;
+            }
+        }
+    }
+    
+} 
+
+
+//AccountTriggerHandlerTest
+
+@istest public class AccountTriggerHandlerTest 
+{
+    @istest private static void BeforeDeletetest()
+    {
+        Account acc = new Account();
+        acc.Name ='Akshara';
+        acc.Type ='Technology partner';
+        acc.Industry ='Electronics';
+        acc.AnnualRevenue =67000;
+        insert acc;
+        
+        
+        contact con = new contact();
+        con.LastName ='singhaniya';
+        con.FirstName = 'nayra';
+        con.Email = 'nayara@gmail.com';
+        con.AccountId = acc.id;
+        insert con;
+        system.debug(con);
+        
+        try
+        {
+            delete acc;
+        }
+        catch(Exception en)
+        {
+            System.assert(
+                en.getMessage().contains(
+                    'can not delete the account'
+                )
+            );
+        }
+        
+        
+    }
+    @istest private static void BeforeInsertBeforeUpdatetest()
+    {
+        Account acc = new Account();
+        acc.Name ='Akshara';
+        acc.Type ='Technology partner';
+        acc.Industry ='Electronics';
+        
+        try
+        {
+            insert acc;
+        }
+        catch(exception e)
+        {
+            system.assert(e.getMessage().contains('kindly enter the Annual Revenue'));
+        }
+    }
+    
+    @istest private static void AfterInserttest()
+    {
+        Account acc = new Account();
+        acc.Name ='Akshara';
+        acc.Type ='Technology partner';
+        acc.Industry ='Electronics';
+        acc.Rating ='Hot';
+        acc.AnnualRevenue =67000;
+        insert acc;
+        
+        list<contact> accRelatedContact = [SELECT Id FROM contact WHERE AccountId =: acc.id];
+        
+        system.assertequals(1,accRelatedContact.size());
+    }
+    
+    @istest private static void AfterUpdatetest()
+    {
+         Account acc = new Account();
+        acc.Name ='Akshara';
+        acc.Type ='Technology partner';
+        acc.Industry ='Electronics';
+        acc.Rating ='Hot';
+        acc.AnnualRevenue =67000;
+        insert acc;
+        
+        acc.Rating ='Cold';
+        update acc;
+        
+        list<case> calist = [SELECT Id FROM case WHERE AccountId =: acc.Id];
+        
+        system.assertequals(1,calist.size());
+        
+        
+         Account acc1 = new Account();
+        acc1.Name ='Akshara';
+        acc1.Type ='Technology partner';
+        acc1.Industry ='Electronics';
+        acc1.Rating ='Hot';
+        acc1.AnnualRevenue =67000;
+        insert acc1;
+        
+        
+        contact con = new contact();
+        con.LastName ='singhaniya';
+        con.FirstName = 'nayra';
+        con.Email = 'nayara@gmail.com';
+        con.AccountId = acc1.id;
+        insert con;
+        
+        acc1.Phone = '7498797944';
+        update acc1;
+        
+        contact getcon =[SELECT Id ,Phone FROM contact WHERE Id =: con.Id];
+        
+        system.assertequals(acc1.phone ,getcon.Phone);
+        
+        
+        
+         Account acc2 = new Account();
+        acc2.Name ='Akshara';
+        acc2.Type ='Technology partner';
+        acc2.Industry ='Electronics';
+        acc2.Rating ='Hot';
+        acc2.AnnualRevenue =67000;
+        insert acc2;
+        
+        
+        Opportunity Opp=new Opportunity();
+        Opp.Name='Riya';
+        Opp.Type='newcustomer';
+        Opp.StageName='prospecting';
+        Opp.CloseDate=date.newinstance(2000,09,25);
+        opp.AccountId=acc2.Id;
+        Insert Opp;
+        system.debug(Opp);
+        
+        acc2.AnnualRevenue = 657857;
+        update acc2;
+        
+        opportunity getopp =[SELECT Id ,Amount FROM Opportunity WHERE id=: opp.Id ];
+        system.assertequals(acc2.AnnualRevenue, getopp.Amount);
+    }
+    
+}
 
